@@ -30,6 +30,7 @@ Changes to output format will likely be made in `Main.java`. Format changes can 
 `Channel`s contain `Broadcast`s, which are collections of `Entry`s. 
 
 The properties of these objects are as follows
+
 `Channel`:
 - `name` - The name of the channel (eg. PawsTV)
 - `channelType` - The type of the channel (eg. television)
