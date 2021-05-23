@@ -93,7 +93,7 @@ public class MainGUI {
 		}
 		else {
 			// we try for Linux. Maybe works, maybe doesn't.
-			steamInstallDir = "~/.steam/steam/SteamApps/common/ProjectZomboid/media/radio";
+			steamInstallDir = "~/.steam/steam/steamapps/common/ProjectZomboid/projectzomboid/media/radio";
 		}
 
 		File installDir = new File(steamInstallDir);
