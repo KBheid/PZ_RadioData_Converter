@@ -79,7 +79,8 @@ public class Main {
 		// Find item name
 		for (String line : lines) {
 			if (line.contains("item")) {
-				out.put("itemName", stripString(line).substring(4));
+				// Exclude the 'item ' prior to the item's name
+				out.put("itemName", stripString(line).substring(5));
 				break;
 			}
 		}
@@ -102,13 +103,13 @@ public class Main {
 				case "Categories":
 					String[] types = kv[1].split(";");
 					if (types.length < 2)
-						out.put("damageType", kv[1]);
+						out.put("damageType", kv[1].trim());
 					else
-						out.put("damageType", types[types.length-1]);
+						out.put("damageType", types[types.length-1].trim());
 					break;
 				// Max units
 				case "UseDelta":
-					float f = Float.parseFloat(kv[1]);
+					float f = Float.parseFloat(kv[1].trim());
 					out.put("maxUnits", String.valueOf(1/f));
 					break;
 				default:
