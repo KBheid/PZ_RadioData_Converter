@@ -1,0 +1,24 @@
+{{Infobox drainable
+|display_name={DisplayName}
+|name_colour=Drainable
+|name_text_colour=Drainable
+|image=[Fill]
+|image_width=[Fill in width or]120px
+|alternate_image=[Fill or remove]
+|alternate_name=[Fill or remove]
+|alternate_link=[Fill or remove]
+|weight={Weight}
+|primary_use=[The item's primary use. Can usually be removed if the item isn't considered a tool by the wiki. (remove if value is empty)]
+|secondary_use=[The item's secondary use if it has one. Can usually be removed if the item isn't considered a tool by the wiki. (remove if value is empty)]
+|max_units=*maxUnits*
+|contents=[The contents of the item, e.g. water, electricity, etc. (remove if value is not considered to have any contents)]
+|can_boil_water=[Whether this item can be used to boil/cook water. Displayed by the variable "iscookable". (remove if value is not considered a water container)]
+|rain_factor={RainFactor}
+|effect={BandagePower}
+|alcohol_power={AlcoholPower}
+|fatigue_change={FatigueChange}
+|light_distance={LightDistance}
+|light_strength={LightStrength}
+|torch_cone=[Whether the light from this item travels in a single direction, a.k.a torch cone. (remove if value is not considered a light source)]
+|class_name=*itemName*
+}}

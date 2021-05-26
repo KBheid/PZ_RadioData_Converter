@@ -1,0 +1,44 @@
+{{Infobox food
+|display_name={DisplayName}
+|name_colour=Food
+|name_text_colour=Food
+|image=[Fill].png
+|image_width=[Fill in width or]120px
+|alternate_image=[Fill or remove]
+|alternate_name=[Fill or remove]
+|alternate_link=[Fill or remove]
+<!--GENERAL-->
+|category=Food[Double check]
+|weight={Weight}
+|function=[What the item is used for. Can usually be removed if the item isn't considered a tool by the wiki. (remove if value is empty)]
+|max_units=*maxUnits*
+|days_fresh={DaysFresh}
+|days_rotten={DaysTotallyRotten}
+|cant_be_frozen={CantBeFrozen}
+|packaged={Packaged}
+<!--NUTRITION-->
+|hunger_change={HungerChange}
+|thirst_change={ThirstChange}
+|calories={Calories}
+|lipids={Lipids}
+|proteins={Proteins}
+|carbohydrates={Carbohydrates}
+<!--EFFECT-->
+|unhappy_change={UnhappyChange}
+|boredom_change={BoredomChange}
+|stress_change={StressChange}
+|fatigue_change={FatigueChange}
+|reduce_infection_power={ReduceInfectionPower}
+|alcohol_power={AlcoholPower}
+|poison_power={PoisonPower}
+<!--COOKING-->
+|cook_minutes={MinutesToCook}
+|burn_minutes={MinutesToBurn}
+|dangerous_uncooked={DangerousUncooked}
+|bad_microwaved={BadInMicrowave}
+|good_hot={GoodHot}
+|bad_cold={BadCold}
+|spice={Spice}
+<!--TECHNICAL DETAILS-->
+|class_name=*itemName*
+}}

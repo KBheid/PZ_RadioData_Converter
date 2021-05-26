@@ -1,0 +1,22 @@
+{{infobox literature
+|display_name={DisplayName}
+|image=[Fill].png
+|image_width=[Fill in width or]120px
+|alternate_image=[Fill or remove]
+|alternate_name=[Fill or remove]
+|alternate_link=[Fill or remove]
+<!--GENERAL-->
+|category=Literature
+|weight={Weight}
+|map={Map}
+|consumed=[Whether this item is consumed once used. (remove if value is false)]
+|writable={CanBeWrite}
+|page_number={NumberOfPages}
+<!--EFFECT-->
+|unhappy_change={UnhappyChange}
+|boredom_change={BoredomChange}
+|stress_change={StressChange}
+|recipes={TeachedRecipes}
+<!--TECHNICAL DETAILS-->
+|class_name=*itemName*
+}}
