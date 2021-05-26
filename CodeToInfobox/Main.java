@@ -162,16 +162,16 @@ public class Main {
 			return null;
 
 		switch (itemType) {
-			case "Weapon":
-				return "wikiForms/wikiForm_Weapon.txt";
-			case "Literature":
-				return "wikiForms/wikiForm_Literature.txt";
-			case "Food":
-				return "wikiForms/wikiForm_Food.txt";
 			case "Drainable":
-				return "wikiForms/wikiForm_Drainable.txt";
+				return "wikiForms/Drainable.txt";
+			case "Food":
+				return "wikiForms/Food.txt";
+			case "Literature":
+				return "wikiForms/Literature.txt";
+			case "Weapon":
+				return "wikiForms/Weapon.txt";
 			default:
-				return "wikiForms/wikiForm_Normal.txt";
+				return "wikiForms/Normal.txt";
 		}
 	}
 }
