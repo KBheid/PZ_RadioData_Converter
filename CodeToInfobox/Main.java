@@ -7,6 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
+	public static final int TAB_SIZE = 8;
+
 	private static String patternStr = "\\{.*}|\\*.*\\*";
 	private static Pattern pattern = Pattern.compile(patternStr);
 
@@ -18,8 +20,11 @@ public class Main {
 
 		mainGUI.generateButton.addActionListener(e -> {
 
-			String convertedText = onGenerate(mainGUI.inputTextArea.getText());
-			mainGUI.outputTextArea.setText(convertedText);
+			String infoboxText = onGenerateInfobox(mainGUI.inputTextArea.getText());
+			String formattedCodeText = onGenerateFormattedCode(mainGUI.inputTextArea.getText());
+
+			mainGUI.infoboxTextArea.setText(infoboxText);
+			mainGUI.formattedCodeTextArea.setText(formattedCodeText);
 		});
 
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -28,7 +33,7 @@ public class Main {
 		frame.setVisible(true);
 	}
 
-	private static String onGenerate(String input) {
+	private static String onGenerateInfobox(String input) {
 		StringBuilder out = new StringBuilder();
 
 		// Get all values from the input code
@@ -65,6 +70,64 @@ public class Main {
 
 			String replaced = matcher.replaceFirst(values.get(replacementKey));
 			out.append(replaced).append("\n");
+		}
+
+		return out.toString();
+	}
+
+	private static String onGenerateFormattedCode(String input) {
+		StringBuilder out = new StringBuilder();
+
+		// Treat each line as its own entry
+		String[] lines = input.split("\n");
+
+		// Get the maximum length of a line
+		int maxLength = 0;
+		for (String line : lines) {
+			String[] splitEquals = line.split("=");
+			if (splitEquals.length < 2)
+				continue;
+
+			String beforeEquals = splitEquals[0].trim();
+			maxLength = (beforeEquals.length() > maxLength) ? beforeEquals.length() : maxLength;
+		}
+
+		// For each line, set it to one tab passed max size
+		for (String line : lines) {
+			String[] splitEquals = line.split("=");
+
+			// If the line doesn't have an equals, skip it
+			if (splitEquals.length < 2) {
+				// ... unless it's the item definition line
+				if (line.trim().startsWith("item"))
+					out.append("\t").append(line.trim()).append("\n");
+				continue;
+			}
+
+			String beforeEquals = splitEquals[0].trim();
+			String afterEquals = splitEquals[1].trim();
+
+			// We want each line to have a tab after it, even if it's the maximum
+			//  so we use a do while
+			int numTabs = 0;
+			int curLength = beforeEquals.length();
+			do {
+				numTabs++;
+				// We add TAB_SIZE-(curLength%TAB_SIZE) because tab stops occur at TAB_SIZE distances.
+				//  That is to say that a tab may only be the length of 1 character, if the line
+				//  is only one character away from the tab stop.
+				curLength += TAB_SIZE-(curLength%TAB_SIZE);
+			}
+			// Again, because each line has a tab after it, we need to stop
+			//  when we reach the max length + 1 tab character's length
+			while (curLength < maxLength+TAB_SIZE-(maxLength%TAB_SIZE));
+
+
+			out.append("\t\t")
+					.append(beforeEquals)
+					.append(repeat(numTabs, "\t"))
+					.append("= ")
+					.append(afterEquals).append("\n");
 		}
 
 		return out.toString();
@@ -174,5 +237,9 @@ public class Main {
 			default:
 				return "wikiForms/Normal.txt";
 		}
+	}
+
+	private static String repeat(int count, String with) {
+		return new String(new char[count]).replace("\0", with);
 	}
 }

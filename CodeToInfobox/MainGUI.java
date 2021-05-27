@@ -9,13 +9,27 @@ public class MainGUI {
 	public JPanel mainPanel;
 	public JButton generateButton;
 	public JTextArea inputTextArea;
-	public JTextArea outputTextArea;
+	public JTextArea infoboxTextArea;
+	public JTextArea formattedCodeTextArea;
 
 	private JButton copyButton;
+	private JTabbedPane tabbedPane1;
 
 	MainGUI() {
+		formattedCodeTextArea.setTabSize(Main.TAB_SIZE);
+
 		copyButton.addActionListener(e -> {
-			StringSelection stringSelection = new StringSelection(outputTextArea.getText());
+			// Get the content of the selected tab
+			String selectedTabContent;
+			switch (tabbedPane1.getTitleAt(tabbedPane1.getSelectedIndex())) {
+				case "Formatted Code":
+					selectedTabContent = formattedCodeTextArea.getText();
+					break;
+				default:
+					selectedTabContent = infoboxTextArea.getText();
+			}
+
+			StringSelection stringSelection = new StringSelection(selectedTabContent);
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			clipboard.setContents(stringSelection, null);
 
