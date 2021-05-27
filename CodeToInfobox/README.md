@@ -1,5 +1,5 @@
 # PZ_RadioData_Converter
-Converts Project Zomboid's item code into a [PZWiki Infobox](https://pzwiki.net/wiki/Category:Infobox).
+Converts Project Zomboid's item code into a [PZWiki Infobox](https://pzwiki.net/wiki/Category:Infobox). It also reformats the code into wiki usable code with proper spacing (if the input was not already.)
 
 Currently supports the following infobox subtypes:
 * Drainable
@@ -123,7 +123,8 @@ The output as of version `CTI_v1.0`:
 `MainGUI.java` contains primarily UI definitions and functionality - specifically the Copy button's functionality.
 `Main.java` contains the parsing functionality of both wikiForms as well as input code.
 * Input code is parsed within the `Map<String, String> parseCode(String)` method.
-* wikiForms definitions are parsed within the `String onGenerate(String)` method.
+* wikiForms definitions are parsed within the `String onGenerateInfobox(String)` method.
+* Formatted code output is generated within the `String onGenerateFormattedCode(String)` method.
 `wikiForms/` contains the format definitions for each supported infobox subtype.
 
 ### Changing output format
