@@ -37,6 +37,9 @@ The output text may include some values enclosed with square brackets (\[]). The
 
 ### Working example
 A working example input taken straight from `item_weapons.txt` from PZ Build 41.50: 
+<details open>
+	<summary>Input</summary>
+
 ```
     item BaseballBat
 	{
@@ -78,8 +81,12 @@ A working example input taken straight from `item_weapons.txt` from PZ Build 41.
 		AttachmentType = Shovel,
 	}
 ```
-
+	
+</details>
 The output as of version `CTI_v1.0`:
+<details>
+	<summary>Infobox</summary>
+
 ```
 {{Infobox weapon
 |display_name=Baseball Bat
@@ -117,7 +124,52 @@ The output as of version `CTI_v1.0`:
 |class_name=BaseballBat
 }}
 ```
+	
+</details>
+<details>
+	<summary>Formatted Code</summary>
 
+```
+	item BaseballBat
+		MaxRange			= 1.25,
+		WeaponSprite			= BaseballBat,
+		MinAngle			= 0.75,
+		Type				= Weapon,
+		MinimumSwingTime		= 3,
+		KnockBackOnNoDeath		= TRUE,
+		SwingAmountBeforeImpact		= 0.02,
+		Categories			= Blunt,
+		ConditionLowerChanceOneIn	= 20,
+		Weight				= 2,
+		SplatNumber			= 1,
+		PushBackMod			= 0.5,
+		SubCategory			= Swinging,
+		ConditionMax			= 15,
+		MaxHitCount			= 2,
+		DoorDamage			= 5,
+		IdleAnim			= Idle_Weapon2,
+		SwingAnim			= Bat,
+		DisplayName			= Baseball Bat,
+		MinRange			= 0.61,
+		SwingTime			= 3,
+		HitAngleMod			= -30,
+		KnockdownMod			= 2,
+		SplatBloodOnNoDeath		= FALSE,
+		Icon				= BaseballBat,
+		RunAnim				= Run_Weapon2,
+		TwoHandWeapon			= TRUE,
+		BreakSound			= BreakWoodItem,
+		TreeDamage			= 1,
+		CriticalChance			= 40,
+		critDmgMultiplier		= 2,
+		MinDamage			= 0.8,
+		MaxDamage			= 1.1,
+		BaseSpeed			= 1,
+		WeaponLength			= 0.5,
+		AttachmentType			= Shovel,
+```
+	
+</details>
 
 ## Making Changes
 `MainGUI.java` contains primarily UI definitions and functionality - specifically the Copy button's functionality.
@@ -142,12 +194,15 @@ The `wikiForms/` format is as follows:
 ### Adding a new wikiForm
 There are three primary steps to adding a new wikiForm.
 1. Create a new file in the `wikiForms/` directory in the form `[infobox_name].txt`
-  * Refer to the prior section (Changing output format) for format specifications.
+  1. Refer to the prior section (Changing output format) for format specifications.
 2. Add your form to the `String getFilenameFromType(String)` method (which switches based on the Type value from the input code)
 3. Add special cases within the `Map<String, String> parseCode(String)` method.
 
 ### Example wikiForm
 The following is an example wikiForm taken from `wikiForm/Normal.txt`, which is based on [Infobox Normal](https://pzwiki.net/wiki/Template:Infobox_normal).
+<details open>
+	<summary>Example</summary>
+
 ```
 {{Infobox normal
 |display_name={DisplayName}
@@ -171,6 +226,8 @@ The following is an example wikiForm taken from `wikiForm/Normal.txt`, which is 
 |class_name=*itemName*
 }}
 ```
+	
+</details>
 
 ## Contributing
 Pull requests are welcome. Features may be requested and bugs may be reported in the Issues tab.
