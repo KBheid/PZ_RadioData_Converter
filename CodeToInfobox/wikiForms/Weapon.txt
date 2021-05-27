@@ -8,7 +8,7 @@
 |alternate_name=[Fill or remove]
 |alternate_link=[Fill or remove]
 <!--GENERAL-->
-|category=weapon[or tool]
+|category=Weapon[or Tool]
 |weight={Weight}
 |function=[What the item is used for. Can usually be removed if the item isn't considered a tool by the wiki. (remove if value is empty)]
 |equipped=*oneOrTwoHanded*
