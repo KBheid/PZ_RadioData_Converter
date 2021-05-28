@@ -1,0 +1,21 @@
+{{Infobox normal
+|display_name={DisplayName}
+|name_colour=Normal
+|name_text_colour=Normal
+|image=[Fill].png
+|image_width=[Fill in width or]120px
+|alternate_image=[Fill or remove]
+|alternate_name=[Fill or remove]
+|alternate_link=[Fill or remove]
+|weight={Weight}
+|primary_use=[The item's primary use. Can usually be removed if the item isn't considered a tool by the wiki. (remove if value is empty)]
+|secondary_use=[The item's secondary use if it has one. Can usually be removed if the item isn't considered a tool by the wiki. (remove if value is empty)]
+|can_store_water={CanStoreWater}
+|rain_factor={RainFactor}
+|bandage_power={BandagePower}
+|alcohol={Alcoholic}
+|wet_cooldown={WetCooldown}
+|remote_range={RemoteRange}
+|ingredients=[A list of ingredients required to make this item. Please use the following format: 1 × [[Plank]] and separate ingredients into a list with <br>.]
+|class_name=*itemName*
+}}

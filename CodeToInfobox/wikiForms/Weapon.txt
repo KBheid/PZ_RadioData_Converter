@@ -1,0 +1,44 @@
+{{Infobox weapon
+|display_name={DisplayName}
+|name_colour=Weapon
+|name_text_colour=Weapon
+|image=[Fill].png
+|image_width=[Fill in width or]120px
+|alternate_image=[Fill or remove]
+|alternate_name=[Fill or remove]
+|alternate_link=[Fill or remove]
+<!--GENERAL-->
+|category=Weapon[or Tool]
+|weight={Weight}
+|function=[What the item is used for. Can usually be removed if the item isn't considered a tool by the wiki. (remove if value is empty)]
+|equipped=*oneOrTwoHanded*
+|secondary_item=[Fill or remove]*oneHanded*
+|condition_max={ConditionMax}
+|attachment_type={AttachmentType}
+<!--CHARACTERISTICS-->
+|ammo_type={AmmoType}
+|clip_size={MaxAmmo}
+|sound_radius={SoundVolume}
+|recoil_delay={RecoilDelay}
+|reload_time={ReloadTime}
+|aiming_time={AimingTime}
+<!--DAMAGE-->
+|type=*damageType*
+|swing_time={SwingTime}
+|min_range={MinRange}
+|max_range={MaxRange}
+|hit_chance={HitChance}
+|min_damage={MinDamage}
+|max_damage={MaxDamage}
+|push_back={PushBackMod}
+|knockdown={KnockdownMod}
+|kill_move=[Double check if correct]{CloseKillMove}
+|effect_power=[The power of the effect caused by the item. (remove if value is empty)]
+|effect_range=[The range of the trap's effect. Defined by either ExplosionRange, FireRange, SmokeRange or NoiseRange. (remove if value is empty)]
+|effect_timer=[Time before trap is triggered. Defined by the ExplosionTimer variable. (remove if value is empty)]
+|effect_type=[The effect given-off by the trap. Can be either: "explosion", "fire", "smoke" or "noise". Any other value will display as "Effect range". (remove if value is empty)]
+|sensor_range=[How close an entity needs to be before the trap is triggered. (remove if value is empty)]
+<!--TECHNICAL DETAILS-->
+|ingredients=[A list of ingredients required to make this item. Please use the following format: 1 × [[Plank]] and separate ingredients into a list with <br>.]
+|class_name=*itemName*
+}}
