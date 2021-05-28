@@ -83,7 +83,9 @@ A working example input taken straight from `item_weapons.txt` from PZ Build 41.
 ```
 	
 </details>
+
 The output as of version `CTI_v1.0`:
+
 <details>
 	<summary>Infobox</summary>
 
