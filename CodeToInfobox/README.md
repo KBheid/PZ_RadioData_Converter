@@ -2,6 +2,7 @@
 Converts Project Zomboid's item code into a [PZWiki Infobox](https://pzwiki.net/wiki/Category:Infobox). It also reformats the code into wiki usable code with proper spacing (if the input was not already.)
 
 Currently supports the following infobox subtypes:
+* Clothing
 * Drainable
 * Food
 * Literature
