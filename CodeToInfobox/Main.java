@@ -234,6 +234,8 @@ public class Main {
 				return "wikiForms/Literature.txt";
 			case "Weapon":
 				return "wikiForms/Weapon.txt";
+			case "Clothing":
+				return "wikiForms/Clothing.txt";
 			default:
 				return "wikiForms/Normal.txt";
 		}

@@ -2,7 +2,7 @@
 |display_name={DisplayName}
 |name_colour=Drainable
 |name_text_colour=Drainable
-|image=[Fill]
+|image=[Fill].png
 |image_width=[Fill in width or]120px
 |alternate_image=[Fill or remove]
 |alternate_name=[Fill or remove]
