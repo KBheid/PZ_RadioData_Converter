@@ -6,7 +6,7 @@ PZ Tools currently contains the following tools:
   * Most recent version: RDCv1.01
 * Code to Infobox creator (CodeToInfobox)
   * Release Tag: CTI
-  * Most recent version: CTIv1.0
+  * Most recent version: CTIv1.10
 
 The parenthesied names are the directories where the respective code can be found. The Release Tags can be used to locate specific tools under the Releases tab.
 
