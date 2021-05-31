@@ -1,0 +1,33 @@
+{{Infobox clothing
+| display_name={DisplayName}
+| name_colour=Clothing
+| name_text_colour=Clothing
+| image=[Fill].png
+| image_width=[Fill in width or]120px
+| alternate_image=[Fill or remove]
+| alternate_name=[Fill or remove]
+| alternate_link=[Fill or remove]
+<!-- General -->
+| category=Clothing
+| weight={Weight}
+| body_location={BodyLocation}
+| condition=[Unknown]
+| fabric_type={FabricType}
+| capacity={Capacity}
+| weight_reduction={WeightReduction}
+| attachments_provided={AttachmentsProvided}
+<!-- Speed -->
+| run_speed={RunSpeedModifier}
+| combat_speed={CombatSpeedModifier}
+<!-- Protection -->
+| scratch_defense={ScratchDefense}
+| bite_defense={BiteDefense}
+| neck_protection=[Unknown]
+<!-- Insulation -->
+| insulation={Insulation}
+| wind_resistance={WindResistance}
+| water_resistance={WaterResistance}
+<!-- Technical details -->
+| ingredients=[Fill or remove]
+| class_name=*itemName*
+}}
