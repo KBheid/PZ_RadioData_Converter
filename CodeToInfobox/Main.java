@@ -43,11 +43,11 @@ public class Main {
 		//  This loads different infobox layouts
 		String wikiFormPath = getFilenameFromType(values.get("Type"));
 
-		if (!fileExists(wikiFormPath))
+		if (!PZLib.fileExists(wikiFormPath, Main.class))
 			return "[Error]: cannot find '" + wikiFormPath + "' file.";
 
 		// Read the contents of the file into wikiForm
-		String wikiForm = readAllOfFile(wikiFormPath);
+		String wikiForm = PZLib.readAllOfFile(wikiFormPath);
 
 		for (String line : wikiForm.split("\n")) {
 			// Find any values in the form {...} or *...*, they are treated the same.
@@ -125,7 +125,7 @@ public class Main {
 
 			out.append("\t\t")
 					.append(beforeEquals)
-					.append(repeat(numTabs, "\t"))
+					.append(PZLib.repeat(numTabs, "\t"))
 					.append("= ")
 					.append(afterEquals).append("\n");
 		}
@@ -143,13 +143,13 @@ public class Main {
 		for (String line : lines) {
 			if (line.contains("item")) {
 				// Exclude the 'item ' prior to the item's name
-				out.put("itemName", stripString(line).substring(5));
+				out.put("itemName", PZLib.stripString(line, ",").substring(5));
 				break;
 			}
 		}
 
 		for (String line : lines) {
-			line = stripString(line);
+			line = PZLib.stripString(line, ",");
 
 			String[] kv = line.split("=");
 			// Skip if there is no = sign
@@ -190,37 +190,6 @@ public class Main {
 		return out;
 	}
 
-	private static String stripString(String toStrip) {
-		return toStrip.trim().replace(",", "");
-	}
-
-	private static String readAllOfFile(String filename) {
-		StringBuilder contentBuilder = new StringBuilder();
-
-		try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename))
-		{
-			int amountRead;
-			do {
-				byte[] bytes = new byte[1024];
-				amountRead = stream.read(bytes);
-
-				String bytesRead = new String(bytes, StandardCharsets.UTF_8);
-				contentBuilder.append(bytesRead);
-			}
-			while (amountRead > 0);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-
-		return contentBuilder.toString();
-	}
-
-	private static boolean fileExists(String filename) {
-		return Main.class.getResourceAsStream(filename) != null;
-	}
-
 	private static String getFilenameFromType(String itemType) {
 		if (itemType == null)
 			return null;
@@ -241,7 +210,4 @@ public class Main {
 		}
 	}
 
-	private static String repeat(int count, String with) {
-		return new String(new char[count]).replace("\0", with);
-	}
 }
