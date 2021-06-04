@@ -59,4 +59,32 @@ public final class PZLib {
 
 		return toStrip;
 	}
+
+	/**
+	 * Gets the default PZ install directory based on OS.
+	 * This could be done by opening registry and yada yada, or we can assume that it's in the default location
+	 * and avoid learning.
+	 * @return The default PZ install directory.
+	 */
+	public static String getDefaultSteamInstallDirectory() {
+		String os = System.getProperty("os.name").toLowerCase();
+
+		boolean isWindows = os.contains("win");
+		boolean isMac = os.contains("mac");
+
+		String steamInstallDir;
+
+		if (isWindows) {
+			steamInstallDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\ProjectZomboid";
+		}
+		else if (isMac) {
+			steamInstallDir = "~/Library/Application Support/Steam/steamapps/common/ProjectZomboid";
+		}
+		else {
+			// we try for Linux. Maybe works, maybe doesn't.
+			steamInstallDir = "~/.steam/steam/steamapps/common/ProjectZomboid/projectzomboid";
+		}
+
+		return steamInstallDir;
+	}
 }

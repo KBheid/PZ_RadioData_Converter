@@ -100,7 +100,7 @@ public class MainGUI {
 			}
 		}
 
-		String steamInstallDir = getDefaultSteamInstallDirectory();
+		String steamInstallDir = PZLib.getDefaultSteamInstallDirectory();
 		String pzDataDirStr = getRadioDirectoryFromPZDirectory(steamInstallDir);
 
 		File pzDataDir = new File(pzDataDirStr);
@@ -134,27 +134,6 @@ public class MainGUI {
 		}
 	}
 
-	private String getDefaultSteamInstallDirectory() {
-		String os = System.getProperty("os.name").toLowerCase();
-
-		boolean isWindows = os.contains("win");
-		boolean isMac = os.contains("mac");
-
-		String steamInstallDir;
-
-		if (isWindows) {
-			steamInstallDir = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\ProjectZomboid";
-		}
-		else if (isMac) {
-			steamInstallDir = "~/Library/Application Support/Steam/steamapps/common/ProjectZomboid";
-		}
-		else {
-			// we try for Linux. Maybe works, maybe doesn't.
-			steamInstallDir = "~/.steam/steam/steamapps/common/ProjectZomboid/projectzomboid";
-		}
-
-		return steamInstallDir;
-	}
 
 	private String getRadioDirectoryFromPZDirectory(String startDirectory) {
 		return startDirectory + File.separator + "media" + File.separator + "radio";
