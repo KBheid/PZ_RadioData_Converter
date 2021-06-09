@@ -30,6 +30,8 @@
 |hit_chance={HitChance}
 |min_damage={MinDamage}
 |max_damage={MaxDamage}
+|tree_damage={TreeDamage}
+|door_damage={DoorDamage}
 |push_back={PushBackMod}
 |knockdown={KnockdownMod}
 |kill_move=[Double check if correct]{CloseKillMove}
