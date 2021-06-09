@@ -45,7 +45,7 @@ public class Main {
 			return "[Error]: cannot find '" + wikiFormPath + "' file.";
 
 		// Read the contents of the file into wikiForm
-		String wikiForm = PZLib.readAllOfFile(wikiFormPath);
+		String wikiForm = PZLib.readAllOfResource(wikiFormPath);
 
 		for (String line : wikiForm.split("\n")) {
 			// Find any values in the form {...} or *...*, they are treated the same.

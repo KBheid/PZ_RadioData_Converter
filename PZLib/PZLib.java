@@ -1,6 +1,6 @@
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public final class PZLib {
 	public static String repeat(int count, String with) {
@@ -13,7 +13,7 @@ public final class PZLib {
 	 * @param filename The input filename - it should be checked to exist with `bool fileExist(String, Class)`.
 	 * @return A string with the contents of the file.
 	 */
-	public static String readAllOfFile(String filename) {
+	public static String readAllOfResource(String filename) {
 		StringBuilder contentBuilder = new StringBuilder();
 
 		try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename))
@@ -34,6 +34,27 @@ public final class PZLib {
 		}
 
 		return contentBuilder.toString();
+	}
+
+	public static String readAllFromFile(String filename) throws IOException {
+		StringBuilder sb = new StringBuilder();
+
+		File f = new File(filename);
+		FileInputStream fis = new FileInputStream(f);
+
+		int bytesRead;
+		byte[] bytes = new byte[1024];
+		do {
+			bytesRead = fis.read(bytes);
+
+			// Eh, not terribly efficient. Oh well.
+			String s = new String(bytes, StandardCharsets.UTF_8);
+			if (bytesRead > 0)
+				sb.append(s.substring(0, bytesRead));
+		}
+		while (bytesRead >= 0);
+
+		return sb.toString();
 	}
 
 	/**
@@ -86,5 +107,9 @@ public final class PZLib {
 		}
 
 		return steamInstallDir;
+	}
+
+	public static String appendSubdirectories(String base, String toAppend) {
+		return base + File.separator + toAppend.replace("/", File.separator).replace("\\", File.separator);
 	}
 }

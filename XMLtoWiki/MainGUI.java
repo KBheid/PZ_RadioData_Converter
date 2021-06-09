@@ -41,11 +41,12 @@ public class MainGUI {
 			if (result == JFileChooser.APPROVE_OPTION) {
 				// If the directory was chosen, delve for the contents.
 				if (fileChooser.getFileFilter() instanceof DirectoryNameFilter) {
-					String fileName = getRadioDirectoryFromPZDirectory(fileChooser.getSelectedFile().getAbsolutePath());
+					String fileName = PZLib.appendSubdirectories(fileChooser.getSelectedFile().getAbsolutePath(),
+							"media/radio/RadioData.xml");
 
 					// Test if file exists, if it does, then set the text, if not, set to 'incorrect directory chosen'
 
-					File f = new File(fileName + File.separator + "RadioData.xml");
+					File f = new File(fileName);
 					if (f.exists()) {
 						inFilenameText.setText(f.getAbsolutePath());
 						inFileCheck.setSelected(true);
@@ -101,7 +102,7 @@ public class MainGUI {
 		}
 
 		String steamInstallDir = PZLib.getDefaultSteamInstallDirectory();
-		String pzDataDirStr = getRadioDirectoryFromPZDirectory(steamInstallDir);
+		String pzDataDirStr = PZLib.appendSubdirectories(steamInstallDir, "media/radio");
 
 		File pzDataDir = new File(pzDataDirStr);
 		if (!pzDataDir.exists())
