@@ -16,29 +16,6 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="b373c" class="javax.swing.JList" binding="itemsList">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="50"/>
-              </grid>
-            </constraints>
-            <properties>
-              <model>
-                <item value="1test"/>
-                <item value="2test"/>
-                <item value="5test"/>
-                <item value="bluetest"/>
-                <item value="redtest"/>
-                <item value="greentest"/>
-                <item value="bltest"/>
-                <item value="11test"/>
-                <item value="1 test"/>
-                <item value="2 test"/>
-                <item value="red test"/>
-                <item value="blutest"/>
-              </model>
-            </properties>
-          </component>
           <component id="b4584" class="javax.swing.JTextField" binding="filterItemsTextField" default-binding="true">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
@@ -49,6 +26,34 @@
               <text value="Filter Items"/>
             </properties>
           </component>
+          <scrollpane id="abbf6">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="b373c" class="javax.swing.JList" binding="itemsList">
+                <constraints/>
+                <properties>
+                  <model>
+                    <item value="1test"/>
+                    <item value="2test"/>
+                    <item value="5test"/>
+                    <item value="bluetest"/>
+                    <item value="redtest"/>
+                    <item value="greentest"/>
+                    <item value="bltest"/>
+                    <item value="11test"/>
+                    <item value="1 test"/>
+                    <item value="2 test"/>
+                    <item value="red test"/>
+                    <item value="blutest"/>
+                  </model>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </grid>
       <scrollpane id="788b9">
