@@ -1,6 +1,11 @@
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.jse.JsePlatform;
+
 import javax.swing.*;
 
 public class Main {
+	static final Globals globals = JsePlatform.standardGlobals();
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("Code to Infobox Tool");
@@ -24,6 +29,9 @@ public class Main {
 	 * @param selected The String name of the selected item.
 	 */
 	private static void onSelectItem(String selected) {
-		System.out.println(selected);
+		//LuaValue chunk = globals.loadfile("lua/test.lua");
+		//LuaValue ret = chunk.call(LuaValue.valueOf(selected));
+
+		//System.out.println(ret.arg1().tojstring());
 	}
 }
