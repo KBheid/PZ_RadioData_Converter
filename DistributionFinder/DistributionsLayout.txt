@@ -1,0 +1,35 @@
+*		= zero or one
+.		= one and only one
+..		= one or more
+...		= zero or more
+
+
+location...
+	isShop*
+	container..
+		(
+			procedural.
+			procList.
+				(
+					name.
+					min.
+					max.
+				)..
+		)*
+		OR
+		(
+			rolls.
+			items.
+				(
+				    name.
+				    odds.
+				)...
+			junk*
+				rolls.
+				items.
+					(
+						name.
+						odds.
+					)...
+		)*
+		
