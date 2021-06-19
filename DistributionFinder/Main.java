@@ -1,22 +1,24 @@
 import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class Main {
 	static final Globals globals = JsePlatform.standardGlobals();
+	static final OutputParser parser = new OutputParser();
+
+	static MainGUI mainGUI;
 
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("Code to Infobox Tool");
+		JFrame frame = new JFrame("Distribution Finder");
 
-		MainGUI mainGUI = new MainGUI();
+		mainGUI = new MainGUI();
 		frame.add(mainGUI.mainPanel);
 
-		mainGUI.itemsList.addListSelectionListener(e -> {
-			if (e.getValueIsAdjusting())
-				onSelectItem(mainGUI.itemsList.getSelectedValue());
-		});
+		mainGUI.itemsList.addListSelectionListener(e -> onSelectItem(mainGUI.itemsList.getSelectedValue()));
 
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.pack();
@@ -24,14 +26,109 @@ public class Main {
 		frame.setVisible(true);
 	}
 
-	/**
-	 * When an object is selected from the items list
-	 * @param selected The String name of the selected item.
-	 */
-	private static void onSelectItem(String selected) {
-		//LuaValue chunk = globals.loadfile("lua/test.lua");
-		//LuaValue ret = chunk.call(LuaValue.valueOf(selected));
-
-		//System.out.println(ret.arg1().tojstring());
+	private static void onSelectItem(String itemName) {
+		updateReadable(itemName);
+		updateWikiMedia(itemName);
 	}
+
+	private static void updateReadable(String itemName) {
+		// Clear the readable tab
+		mainGUI.distributionReadableTextArea.setText("");
+
+		for (Location l : parser.locations) {
+			if (!l.containsItem(itemName))
+				continue;
+
+			mainGUI.distributionReadableTextArea.append("Location: " + l.name + "\n");
+			for (Container c : l.containers) {
+				List<Item> occurrences = c.getItem(itemName);
+				if (occurrences.size() > 0) {
+					mainGUI.distributionReadableTextArea.append("\t" + c.name + ", rolls: " + c.rolls + "\n");
+					for (Item item : occurrences)
+						mainGUI.distributionReadableTextArea.append("\t\t" + item.odds + "\n");
+				}
+			}
+		}
+
+		for (Container c : parser.locationlessContainers) {
+			List<Item> occurrences = c.getItem(itemName);
+			if (occurrences.size() > 0) {
+				mainGUI.distributionReadableTextArea.append(c.name + ", rolls: " + c.rolls + "\n");
+				for (Item item : occurrences)
+					mainGUI.distributionReadableTextArea.append("\tOdds:" + item.odds + "\n");
+			}
+		}
+	}
+
+	private static void updateWikiMedia(String itemName) {
+		// Clear the WikiMedia tab
+		int numBuildings = 0;
+		mainGUI.distributionWikiMediaTextArea.setText("");
+		mainGUI.distributionWikiMediaTextArea.append("=== Buildings ===\n");
+		mainGUI.distributionWikiMediaTextArea.append("" +
+			"{| class=\"pztable\" style=\"text-align:center;\"\n" +
+				"|-\n" +
+				"!Building/Room\n" +
+				"!Container\n" +
+				"!Rolls\n" +
+				"!Chance\n" +
+			"|-\n");
+
+		for (Location l : parser.locations) {
+			if (!l.containsItem(itemName))
+				continue;
+
+			numBuildings++;
+			Set<Container> containersWithItem = l.getContainersWithItem(itemName);
+			// TODO line that contains |rowspan=#|[Roll Count]
+
+			int numChances = 0;
+			for (Container c : containersWithItem) {
+				numChances += c.getItem(itemName).size();
+			}
+
+			// Expand the rows covered to be as many as there are chances for the item
+			if (numChances > 1)
+				mainGUI.distributionWikiMediaTextArea.append("|rowspan=" + numChances);
+			mainGUI.distributionWikiMediaTextArea.append("|" + l.name + "\n");
+
+			for (Container c : containersWithItem) {
+				List<Item> items = c.getItem(itemName);
+
+				// The container name
+				if (items.size() > 1)
+					mainGUI.distributionWikiMediaTextArea.append("|rowspan=" + items.size());
+				mainGUI.distributionWikiMediaTextArea.append("|" + c.name + "\n");
+
+				// The container's rolls
+				if (items.size() > 1)
+					mainGUI.distributionWikiMediaTextArea.append("|rowspan=" + items.size());
+				mainGUI.distributionWikiMediaTextArea.append("|" + c.rolls + "\n");
+
+				for (Item i : items) {
+					mainGUI.distributionWikiMediaTextArea.append("|" + i.odds + "\n" +
+							"|-\n");
+				}
+			}
+		}
+
+		mainGUI.distributionWikiMediaTextArea.append("|}\n");
+
+		mainGUI.distributionWikiMediaTextArea.append("=== Containers ===\n");
+		mainGUI.distributionWikiMediaTextArea.append("A list of containers that the item can be found in, not limited to buildings.\n");
+		mainGUI.distributionWikiMediaTextArea.append(
+			"{| class=\"pztable\" style=\"text-align:center;\"\n" +
+				"|-\n" +
+				"!Container\n" +
+				"!Rolls\n" +
+				"!Chance\n" +
+			"|-\n");
+
+		for (Container c : parser.locationlessContainers) {
+
+		}
+
+		mainGUI.distributionWikiMediaTextArea.append("|}\n");
+	}
+
 }

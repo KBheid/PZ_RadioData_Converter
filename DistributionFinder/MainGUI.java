@@ -1,6 +1,4 @@
-import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.jse.JsePlatform;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -10,21 +8,20 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 
 public class MainGUI {
 	public JPanel mainPanel;
 	public JList<String> itemsList;
-	public JTextArea distributionTextArea;
+	public JList<String> locationsList;
+	public JTextArea distributionWikiMediaTextArea;
+	public JTextArea distributionReadableTextArea;
+	public JTabbedPane rightTabbedPane;
 
 	private JTextField filterItemsTextField;
 	private JTextField selectedItemTextField;
-
-	// A list of all the items in the game
-	public Set<String> allItems = new HashSet<>();
+	private JButton copyButton;
 
 	MainGUI() {
 		// Ew, gross... Java.
@@ -88,12 +85,12 @@ public class MainGUI {
 		chunk.call();
 
 		// Read all of the items from the file into String ret
-		LuaValue chunk2 = Main.globals.loadfile("lua/test.lua");
+		LuaValue chunk2 = Main.globals.loadfile("lua/distributionParser.lua");
 		String ret = chunk2.call().tojstring();
 
-		// Put them in the list and update the list
+		// IDK how to use luaj, so I just return a... huge string with all item distribution data
 		for (String s : ret.split("\n")) {
-			allItems.add(s.replace("TINT", "").replace("TEXTURE_", ""));
+			Main.parser.parseLine(s);
 		}
 
 		updateList();
@@ -126,27 +123,48 @@ public class MainGUI {
 
 	private void onFilterChange() {
 		String text = filterItemsTextField.getText();
-
 		DefaultListModel<String> newList = new DefaultListModel<>();
-		for (String s : allItems) {
-			// get rid of all spaces
+
+		Set<String> list;
+		switch (rightTabbedPane.getTitleAt(rightTabbedPane.getSelectedIndex())) {
+			case "Locations":
+				list = Main.parser.getAllLocationNames();
+				break;
+			case "Items":
+			default:
+				list = Main.parser.getAllItemNames();
+		}
+
+		for (String s : list) {
+			// Get rid of all spaces and set cases to lowercase
 			String toFind = PZLib.stripString(s, " ").toLowerCase();
 			String searchString = PZLib.stripString(text, " ").toLowerCase();
 
-			if (toFind.startsWith(searchString))
+			if (toFind.contains(searchString))
 				newList.addElement(s);
 		}
 
-		itemsList.setModel(newList);
+		// Ugly but meh
+		switch (rightTabbedPane.getTitleAt(rightTabbedPane.getSelectedIndex())) {
+			case "Containers":
+				locationsList.setModel(newList);
+			case "Items":
+			default:
+				itemsList.setModel(newList);
+		}
 	}
 
 	private void updateList() {
-		DefaultListModel<String> newList = new DefaultListModel<>();
+		DefaultListModel<String> newItemList = new DefaultListModel<>();
+		DefaultListModel<String> newLocationList = new DefaultListModel<>();
 
-		for (String s : allItems) {
-			newList.addElement(s);
-		}
+		for (String s : Main.parser.getAllItemNames())
+			newItemList.addElement(s);
 
-		itemsList.setModel(newList);
+		for (String s : Main.parser.getAllLocationNames())
+			newLocationList.addElement(s);
+
+		itemsList.setModel(newItemList);
+		locationsList.setModel(newLocationList);
 	}
 }
