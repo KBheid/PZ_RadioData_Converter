@@ -7,88 +7,65 @@ function stripExtras(line)
         :gsub("farming.", "")
 end
 
-function parseProcedural(container, vals, location)
-    local ret = ""
+function parseContainer(name, vals)
+    itemList = luajava.newInstance("java.util.ArrayList")
 
-    ret = ret .. "container[name:" .. stripExtras(container) .. "|procedural";
-    if location then
-        ret = ret .. "|location=" .. location
+    rolls = 1
+    if vals["rolls"] then
+        rolls = tonumber(vals["rolls"])
     end
+    procedural = vals["procedural"] ~= nil
 
-    ret = ret .. "]\n"
-    return ret;
+    lastItemName = ""
+    for i,nameOrOdds in ipairs(vals["items"]) do
+        if i%2 == 1 then
+            lastItemName = stripExtras(nameOrOdds)
+        else
+            itemList:add(luajava.newInstance("LuaJavaDefines.Item", lastItemName, tonumber(nameOrOdds)))
+        end
+    end
+    return luajava.newInstance("LuaJavaDefines.Container", name, rolls, itemList, procedural)
 end
 
-function parseContainer(container, vals, location)
-    if vals["procedural"] then
-        return parseProcedural(container, vals, location)
+function parseLocation(name, vals)
+    isShop = false
+    if vals["isShop"] then
+        isShop = true
     end
 
-    local ret = ""
-
-    if vals["rolls"] then
-        ret = ret .. "container[name:" .. stripExtras(container) .. "|rolls:" .. vals["rolls"]
-    end
-
-    if (location) then
-        ret = ret .. "|location:" .. location
-    end
-
-    ret = ret .. "]\n"
-
-    if vals["items"] then
-        for i,line in ipairs(vals["items"]) do
-            if i%2 == 1 then
-                ret = ret .. "item[name:" .. stripExtras(line)
-            else
-                ret = ret .. "|odds:" .. line .. "]\n"
+    containers = luajava.newInstance("java.util.ArrayList")
+    for c,v in pairs(vals) do
+        if type(v) == "table" then
+            if v["items"] then
+                containers:add(parseContainer(c,v))
             end
         end
     end
 
-    if vals["junk"] then
-
-    end
-
-    return ret
+    return luajava.newInstance("LuaJavaDefines.Location", name, isShop, containers)
 end
 
-function parseLocation(location, values)
-    local ret = ""
+returnTable = {}
+locationsList = luajava.newInstance("java.util.ArrayList")
+containersList = luajava.newInstance("java.util.ArrayList")
 
-    ret = ret .. "location[name:" .. stripExtras(location)
-    if values["isShop"] then
-        ret = ret .. "|isShop"
-    end
-
-    ret = ret .. "]\n"
-
-    for container, vals in pairs(values) do
-        if type(vals) ~= "table" then
-            goto continueContainer
-        end
-
-        ret = ret .. parseContainer(container, vals, location)
-
-        ::continueContainer::
-    end
-
-    return ret
-end
-
-
-local ret = ""
 for k,v in pairs(distributionTable) do
     -- If it has an 'items' key, it is a container itself.
     if v["items"] then
-        ret = ret .. parseContainer(k, v)
+        if #v["items"] < 1 then
+            goto continue
+        end
+        containersList:add(parseContainer(k, v))
         goto continue
     end
 
     -- Otherwise, parse it as a location
-    ret = ret .. parseLocation(k, v)
+    locationsList:add(parseLocation(k,v))
 
     ::continue::
 end
 
-return ret
+returnTable["locations"] = locationsList
+returnTable["locationLesscontainers"] = containersList
+
+return returnTable

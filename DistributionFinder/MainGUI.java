@@ -1,3 +1,6 @@
+import LuaJavaDefines.Container;
+import LuaJavaDefines.Location;
+import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 
 import javax.swing.*;
@@ -8,6 +11,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 
@@ -84,14 +88,12 @@ public class MainGUI {
 		LuaValue chunk = Main.globals.load(contents);
 		chunk.call();
 
-		// Read all of the items from the file into String ret
-		LuaValue chunk2 = Main.globals.loadfile("lua/distributionParser.lua");
-		String ret = chunk2.call().tojstring();
+		LuaValue chunk2 = Main.globals.loadfile("lua/distributionParser.lua").call();
 
-		// IDK how to use luaj, so I just return a... huge string with all item distribution data
-		for (String s : ret.split("\n")) {
-			Main.parser.parseLine(s);
-		}
+		LuaTable returnVal = chunk2.checktable();
+
+		Main.parser.locations = (List<Location>) returnVal.get("locations").touserdata();
+		Main.parser.locationlessContainers = (List<Container>) returnVal.get("locationLesscontainers").touserdata();
 
 		updateList();
 	}
