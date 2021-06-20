@@ -82,7 +82,6 @@ public class Main {
 
 			numBuildings++;
 			Set<Container> containersWithItem = l.getContainersWithItem(itemName);
-			// TODO line that contains |rowspan=#|[Roll Count]
 
 			int numChances = 0;
 			for (Container c : containersWithItem) {
@@ -113,9 +112,10 @@ public class Main {
 				}
 			}
 		}
-
 		mainGUI.distributionWikiMediaTextArea.append("|}\n");
 
+		
+		mainGUI.distributionWikiMediaTextArea.append("'''''EDITOR! CHECK THE FOLLOWING SECTION TO SEE IF IT CONTAINS ANY ITEMS'''''");
 		mainGUI.distributionWikiMediaTextArea.append("=== Containers ===\n");
 		mainGUI.distributionWikiMediaTextArea.append("A list of containers that the item can be found in, not limited to buildings.\n");
 		mainGUI.distributionWikiMediaTextArea.append(
@@ -127,7 +127,25 @@ public class Main {
 			"|-\n");
 
 		for (Container c : parser.locationlessContainers) {
+			List<Item> items = c.getItem(itemName);
 
+			if (items.size() < 1)
+				continue;
+
+			// The container name
+			if (items.size() > 1)
+				mainGUI.distributionWikiMediaTextArea.append("|rowspan=" + items.size());
+			mainGUI.distributionWikiMediaTextArea.append("|" + c.name + "\n");
+
+			// The container's rolls
+			if (items.size() > 1)
+				mainGUI.distributionWikiMediaTextArea.append("|rowspan=" + items.size());
+			mainGUI.distributionWikiMediaTextArea.append("|" + c.rolls + "\n");
+
+			for (Item i : items) {
+				mainGUI.distributionWikiMediaTextArea.append("|" + i.odds + "\n" +
+						"|-\n");
+			}
 		}
 
 		mainGUI.distributionWikiMediaTextArea.append("|}\n");
