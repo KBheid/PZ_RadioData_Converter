@@ -80,20 +80,13 @@ public class MainGUI {
 		}
 
 		// Horribly efficient, just how I like it.
-		String contents = PZLib.readAllFromFile(distributionsFile.getAbsolutePath());
+		String distributionContents = PZLib.readAllFromFile(distributionsFile.getAbsolutePath());
+
+
 		// Just... remove any 'local' from the mix. We'd like to be able to load this in and read it elsewhere
-		contents = contents.replace("local", "");
+		distributionContents = distributionContents.replace("local", "");
 
-		// Load in the Distribution values
-		LuaValue chunk = Main.globals.load(contents);
-		chunk.call();
-
-		LuaValue chunk2 = Main.globals.loadfile("lua/distributionParser.lua").call();
-
-		LuaTable returnVal = chunk2.checktable();
-
-		Main.parser.locations = (List<Location>) returnVal.get("locations").touserdata();
-		Main.parser.locationlessContainers = (List<Container>) returnVal.get("locationLesscontainers").touserdata();
+		Main.parser.parseDistributions(distributionContents);
 
 		updateList();
 	}

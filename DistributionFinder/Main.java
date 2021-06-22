@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class Main {
 	static final Globals globals = JsePlatform.standardGlobals();
-	static final OutputParser parser = new OutputParser();
+	static final DistributionManager parser = new DistributionManager();
 
 	static MainGUI mainGUI;
 
@@ -64,23 +64,28 @@ public class Main {
 
 	private static void updateWikiMedia(String itemName) {
 		// Clear the WikiMedia tab
-		int numBuildings = 0;
 		mainGUI.distributionWikiMediaTextArea.setText("");
+		addBuildingsToWikiMedia(itemName);
+
+		mainGUI.distributionWikiMediaTextArea.append("'''''EDITOR! CHECK THE FOLLOWING SECTION TO SEE IF IT CONTAINS ANY ITEMS'''''");
+		addContainersToWikiMedia(itemName);
+	}
+
+	private static void addBuildingsToWikiMedia(String itemName) {
 		mainGUI.distributionWikiMediaTextArea.append("=== Buildings ===\n");
 		mainGUI.distributionWikiMediaTextArea.append("" +
-			"{| class=\"pztable\" style=\"text-align:center;\"\n" +
+				"{| class=\"pztable\" style=\"text-align:center;\"\n" +
 				"|-\n" +
 				"!Building/Room\n" +
 				"!Container\n" +
 				"!Rolls\n" +
 				"!Chance\n" +
-			"|-\n");
+				"|-\n");
 
 		for (Location l : parser.locations) {
 			if (!l.containsItem(itemName))
 				continue;
 
-			numBuildings++;
 			Set<Container> containersWithItem = l.getContainersWithItem(itemName);
 
 			int numChances = 0;
@@ -113,18 +118,17 @@ public class Main {
 			}
 		}
 		mainGUI.distributionWikiMediaTextArea.append("|}\n");
-
-		
-		mainGUI.distributionWikiMediaTextArea.append("'''''EDITOR! CHECK THE FOLLOWING SECTION TO SEE IF IT CONTAINS ANY ITEMS'''''");
+	}
+	private static void addContainersToWikiMedia(String itemName) {
 		mainGUI.distributionWikiMediaTextArea.append("=== Containers ===\n");
 		mainGUI.distributionWikiMediaTextArea.append("A list of containers that the item can be found in, not limited to buildings.\n");
 		mainGUI.distributionWikiMediaTextArea.append(
-			"{| class=\"pztable\" style=\"text-align:center;\"\n" +
-				"|-\n" +
-				"!Container\n" +
-				"!Rolls\n" +
-				"!Chance\n" +
-			"|-\n");
+				"{| class=\"pztable\" style=\"text-align:center;\"\n" +
+						"|-\n" +
+						"!Container\n" +
+						"!Rolls\n" +
+						"!Chance\n" +
+						"|-\n");
 
 		for (Container c : parser.locationlessContainers) {
 			List<Item> items = c.getItem(itemName);
@@ -150,5 +154,4 @@ public class Main {
 
 		mainGUI.distributionWikiMediaTextArea.append("|}\n");
 	}
-
 }
