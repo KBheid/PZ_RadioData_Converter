@@ -173,10 +173,10 @@ public class MainGUI {
 		});
 	}
 	private void setupList() {
-		itemsList.addListSelectionListener(e -> {
-			selectedItemTextField.setText(itemsList.getSelectedValue());
-		});
+		// Set text above text areas to selected item
+		itemsList.addListSelectionListener(e -> selectedItemTextField.setText(itemsList.getSelectedValue()));
 
+		// Again, set text above text areas. Also, when a location is selected, update its containers
 		locationsList.addListSelectionListener(e -> {
 			selectedItemTextField.setText(locationsList.getSelectedValue());
 

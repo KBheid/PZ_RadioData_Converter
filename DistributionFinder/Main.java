@@ -22,6 +22,7 @@ public class Main {
 		frame.setJMenuBar(mainGUI.menuBar);
 
 		mainGUI.itemsList.addListSelectionListener(e -> onSelectItem(mainGUI.itemsList.getSelectedValue()));
+		mainGUI.locationsList.addListSelectionListener(e -> onSelectLocation(mainGUI.locationsList.getSelectedValue()));
 		mainGUI.containerList.addListSelectionListener(e -> {
 			if (mainGUI.containerList.getSelectedValue() != null)
 				onSelectContainer(mainGUI.containerList.getSelectedValue(), mainGUI.locationsList.getSelectedValue());
@@ -36,7 +37,7 @@ public class Main {
 	// ============  SEARCH BY ITEM  ============
 	private static void onSelectItem(String itemName) {
 		updateReadable(itemName);
-		updateWikiMedia(itemName);
+		updateMediaWiki(itemName);
 	}
 	private static void updateReadable(String itemName) {
 		// Clear the readable tab
@@ -83,8 +84,8 @@ public class Main {
 			}
 		}
 	}
-	private static void updateWikiMedia(String itemName) {
-		// Clear the WikiMedia tab
+	private static void updateMediaWiki(String itemName) {
+		// Clear the MediaWiki tab
 		mainGUI.distributionMediaWikiTextArea.setText("");
 		addBuildingsToMediaWiki(itemName);
 
@@ -230,19 +231,18 @@ public class Main {
 	// ============ SEARCH BY CONTAINER ============
 	private static void onSelectContainer(String containerName, String location) {
 		updateReadableByContainer(containerName, location);
+		updateMediaWikiByContainer(containerName, location);
 	}
 	private static void updateReadableByContainer(String containerName, String location) {
 		mainGUI.distributionReadableTextArea.setText("");
 		Container con = null;
-		System.out.println(containerName + " in " + location);
-		for (Location l : parser.locations) {
-			if (l.name.equals(location)) {
-				for (Container c : l.containers)
-					if (c.name.equals(containerName)) {
-						con = c;
-						break;
-					}
-			}
+		Location l = parser.getLocationOrVehicleByName(location);
+		if (l.name.equals(location)) {
+			for (Container c : l.containers)
+				if (c.name.equals(containerName)) {
+					con = c;
+					break;
+				}
 		}
 
 		mainGUI.distributionReadableTextArea.append(location + "\n");
@@ -252,16 +252,41 @@ public class Main {
 		for (Item i : con.items)
 			mainGUI.distributionReadableTextArea.append("\t\t" + i.name + " : " + i.odds + "\n");
 	}
-	private static void updateMediaWikiByContainer() {}
+	private static void updateMediaWikiByContainer(String containerName, String location) {
+		mainGUI.distributionMediaWikiTextArea.setText("");
+		mainGUI.distributionMediaWikiTextArea.append("MediaWiki format is not available for containers.\n");
+		mainGUI.distributionMediaWikiTextArea.append("Supported types include:\n");
+		mainGUI.distributionMediaWikiTextArea.append("\tItems\n");
+		mainGUI.distributionMediaWikiTextArea.append("\tLocations\n");
+	}
 
 
 	// ============ SEARCH BY LOCATION ============
 	private static void onSelectLocation(String location) {
 		updateReadableByLocation(location);
+		updateMediaWikiByLocation(location);
 	}
 	private static void updateReadableByLocation(String location) {
+		Location loc = Main.parser.getLocationOrVehicleByName(location);
+
+		mainGUI.distributionReadableTextArea.setText("");
+		mainGUI.distributionReadableTextArea.append(location + "\n");
+
+		for (Container c : loc.containers) {
+			mainGUI.distributionReadableTextArea.append("\t" + c.name + "\n");
+			mainGUI.distributionReadableTextArea.append("\tRolls: " + c.rolls + "\n");
+
+			for (Item i : c.items) {
+				mainGUI.distributionReadableTextArea.append("\t\t" + i.name + " : " + i.odds + "\n");
+			}
+		}
 
 	}
-	private static void updateMediaWikiByLocation() {}
+	private static void updateMediaWikiByLocation(String location) {
+		mainGUI.distributionMediaWikiTextArea.setText("");
+		mainGUI.distributionMediaWikiTextArea.append("Coming soon.\n");
+
+		Location l = Main.parser.getLocationOrVehicleByName(location);
+	}
 
 }

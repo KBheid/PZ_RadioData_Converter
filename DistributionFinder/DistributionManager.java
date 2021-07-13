@@ -44,16 +44,8 @@ public class DistributionManager {
         return out;
     }
     public Set<String> getContainerNamesFromLocationName(String locationName) {
-        for (Location l : locations) {
-            if (l.name.equals(locationName))
-                return l.getContainerNames();
-        }
-        for (Location l : vehicles) {
-            if (l.name.equals(locationName))
-                return l.getContainerNames();
-        }
-
-        return null;
+        Location l = getLocationOrVehicleByName(locationName);
+        return l.getContainerNames();
     }
 
     @SuppressWarnings("unchecked")
@@ -72,6 +64,25 @@ public class DistributionManager {
         LuaValue chunk2 = Main.globals.loadfile("lua/distributionVehiclesParser.lua").call();
 
         vehicles = (List<Location>) chunk2.touserdata();
+    }
+
+    public Location getLocationByName(String name) {
+        for (Location l : Main.parser.locations)
+            if (l.name.equals(name))
+                return l;
+
+        return null;
+    }
+    public Location getVehicleByName(String name) {
+        for (Location l : Main.parser.vehicles)
+            if (l.name.equals(name))
+                return l;
+
+        return null;
+    }
+    public Location getLocationOrVehicleByName(String name) {
+        Location loc = getLocationByName(name);
+        return (loc == null) ? getVehicleByName(name) : loc;
     }
 
 }
