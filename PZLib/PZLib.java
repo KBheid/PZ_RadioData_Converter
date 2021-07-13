@@ -1,3 +1,5 @@
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -111,5 +113,37 @@ public final class PZLib {
 
 	public static String appendSubdirectories(String base, String toAppend) {
 		return base + File.separator + toAppend.replace("/", File.separator).replace("\\", File.separator);
+	}
+
+	/**
+	 * Prompts the user for the PZ directory
+	 * @return The chosen file or null if cancelled
+	 */
+	public static File promptForPZDir(Component parentComponent) {
+		JFileChooser jfc = new JFileChooser();
+
+		jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		jfc.addChoosableFileFilter(new DirectoryNameFilter("ProjectZomboid"));
+		jfc.setAcceptAllFileFilterUsed(false);
+
+		// Search for the PZ directory - if we find it, then back out a directory
+		//  and place the user there.
+		String installDir = PZLib.getDefaultSteamInstallDirectory();
+		File installDirFile = new File(installDir);
+		if (installDirFile.exists())
+			jfc.setCurrentDirectory(installDirFile.getParentFile());
+		else
+			jfc.setCurrentDirectory(new File("."));
+
+		// Show the dialog, get the result
+		int result = jfc.showOpenDialog(parentComponent);
+
+
+		// If they clicked cancel, return null
+		if (result != JFileChooser.APPROVE_OPTION)
+			return null;
+
+		// Otherwise get the file they selected
+		return jfc.getSelectedFile();
 	}
 }
