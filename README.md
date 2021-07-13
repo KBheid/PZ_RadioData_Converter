@@ -7,6 +7,9 @@ PZ Tools currently contains the following tools:
 * Code to Infobox creator (CodeToInfobox)
   * Release Tag: CTI
   * Most recent version: CTIv1.10
+* Distribution Finder tool (DistributionFinder)
+  * Release Tag: DF
+  * Most recent version: DFv1.0
 
 The parenthesied names are the directories where the respective code can be found. The Release Tags can be used to locate specific tools under the Releases tab.
 
