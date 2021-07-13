@@ -27,7 +27,8 @@ Download necessary version from [Releases](https://github.com/KBheid/PZ_RadioDat
 Requires Java 8+.
 
 ## Usage
-Open the JAR by double clicking or utilizing `java -jar PZ_CodeToInfobox.jar` from the commandline.
+Open the JAR by double clicking or utilizing `java -jar PZ_DistributionFinder.jar` 
+from the commandline.
 
 ### Selecting a source
 The item list is populated via the different distribution files used by Project Zomboid.
@@ -161,6 +162,10 @@ The output format is set in `Main.java`.
 * The 'MediaWiki' tab output is defined in `updateMediaWiki()`
 
 ## Future Features
+### Procedural item spawns
+Some items spawn as 'sets' or themes. For example, a duffel bag may spawn
+with themed items - for example money and a gun. Currently, these are not
+handled at all by the tool, but should be in the future.
 ### Get all item spawns for a location/vehicle
 The ability to select from a list of locations or vehicles and retrieve all items
 that can spawn in them, separated by container.
