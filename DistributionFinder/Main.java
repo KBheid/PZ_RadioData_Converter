@@ -19,6 +19,7 @@ public class Main {
 
 		mainGUI = new MainGUI();
 		frame.add(mainGUI.mainPanel);
+		frame.setJMenuBar(mainGUI.menuBar);
 
 		mainGUI.itemsList.addListSelectionListener(e -> onSelectItem(mainGUI.itemsList.getSelectedValue()));
 
@@ -60,20 +61,40 @@ public class Main {
 					mainGUI.distributionReadableTextArea.append("\tOdds:" + item.odds + "\n");
 			}
 		}
+
+		if (!parser.vehicles.isEmpty()) {
+			for (Location l : parser.vehicles) {
+				if (!l.containsItem(itemName))
+					continue;
+
+				mainGUI.distributionReadableTextArea.append("Vehicle: " + l.name + "\n");
+				for (Container c : l.containers) {
+					List<Item> occurrences = c.getItem(itemName);
+					if (occurrences.size() > 0) {
+						mainGUI.distributionReadableTextArea.append("\t" + c.name + ", rolls: " + c.rolls + "\n");
+						for (Item item : occurrences)
+							mainGUI.distributionReadableTextArea.append("\t\t" + item.odds + "\n");
+					}
+				}
+			}
+		}
 	}
 
 	private static void updateWikiMedia(String itemName) {
 		// Clear the WikiMedia tab
-		mainGUI.distributionWikiMediaTextArea.setText("");
-		addBuildingsToWikiMedia(itemName);
+		mainGUI.distributionMediaWikiTextArea.setText("");
+		addBuildingsToMediaWiki(itemName);
 
-		mainGUI.distributionWikiMediaTextArea.append("'''''EDITOR! CHECK THE FOLLOWING SECTION TO SEE IF IT CONTAINS ANY ITEMS'''''");
-		addContainersToWikiMedia(itemName);
+		mainGUI.distributionMediaWikiTextArea.append("'''''EDITOR! CHECK THE FOLLOWING SECTION TO SEE IF IT CONTAINS ANY ITEMS'''''\n");
+		addContainersToMediaWiki(itemName);
+
+		mainGUI.distributionMediaWikiTextArea.append("'''''EDITOR! CHECK THE FOLLOWING SECTION TO SEE IF IT CONTAINS ANY ITEMS'''''\n");
+		addVehiclesToMediaWiki(itemName);
 	}
 
-	private static void addBuildingsToWikiMedia(String itemName) {
-		mainGUI.distributionWikiMediaTextArea.append("=== Buildings ===\n");
-		mainGUI.distributionWikiMediaTextArea.append("" +
+	private static void addBuildingsToMediaWiki(String itemName) {
+		mainGUI.distributionMediaWikiTextArea.append("=== Buildings ===\n");
+		mainGUI.distributionMediaWikiTextArea.append("" +
 				"{| class=\"pztable\" style=\"text-align:center;\"\n" +
 				"|-\n" +
 				"!Building/Room\n" +
@@ -95,34 +116,34 @@ public class Main {
 
 			// Expand the rows covered to be as many as there are chances for the item
 			if (numChances > 1)
-				mainGUI.distributionWikiMediaTextArea.append("|rowspan=" + numChances);
-			mainGUI.distributionWikiMediaTextArea.append("|" + l.name + "\n");
+				mainGUI.distributionMediaWikiTextArea.append("|rowspan=" + numChances);
+			mainGUI.distributionMediaWikiTextArea.append("|" + l.name + "\n");
 
 			for (Container c : containersWithItem) {
 				List<Item> items = c.getItem(itemName);
 
 				// The container name
 				if (items.size() > 1)
-					mainGUI.distributionWikiMediaTextArea.append("|rowspan=" + items.size());
-				mainGUI.distributionWikiMediaTextArea.append("|" + c.name + "\n");
+					mainGUI.distributionMediaWikiTextArea.append("|rowspan=" + items.size());
+				mainGUI.distributionMediaWikiTextArea.append("|" + c.name + "\n");
 
 				// The container's rolls
 				if (items.size() > 1)
-					mainGUI.distributionWikiMediaTextArea.append("|rowspan=" + items.size());
-				mainGUI.distributionWikiMediaTextArea.append("|" + c.rolls + "\n");
+					mainGUI.distributionMediaWikiTextArea.append("|rowspan=" + items.size());
+				mainGUI.distributionMediaWikiTextArea.append("|" + c.rolls + "\n");
 
 				for (Item i : items) {
-					mainGUI.distributionWikiMediaTextArea.append("|" + i.odds + "\n" +
+					mainGUI.distributionMediaWikiTextArea.append("|" + i.odds + "\n" +
 							"|-\n");
 				}
 			}
 		}
-		mainGUI.distributionWikiMediaTextArea.append("|}\n");
+		mainGUI.distributionMediaWikiTextArea.append("|}\n");
 	}
-	private static void addContainersToWikiMedia(String itemName) {
-		mainGUI.distributionWikiMediaTextArea.append("=== Containers ===\n");
-		mainGUI.distributionWikiMediaTextArea.append("A list of containers that the item can be found in, not limited to buildings.\n");
-		mainGUI.distributionWikiMediaTextArea.append(
+	private static void addContainersToMediaWiki(String itemName) {
+		mainGUI.distributionMediaWikiTextArea.append("=== Containers ===\n");
+		mainGUI.distributionMediaWikiTextArea.append("A list of containers that the item can be found in, not limited to buildings.\n");
+		mainGUI.distributionMediaWikiTextArea.append(
 				"{| class=\"pztable\" style=\"text-align:center;\"\n" +
 						"|-\n" +
 						"!Container\n" +
@@ -138,20 +159,68 @@ public class Main {
 
 			// The container name
 			if (items.size() > 1)
-				mainGUI.distributionWikiMediaTextArea.append("|rowspan=" + items.size());
-			mainGUI.distributionWikiMediaTextArea.append("|" + c.name + "\n");
+				mainGUI.distributionMediaWikiTextArea.append("|rowspan=" + items.size());
+			mainGUI.distributionMediaWikiTextArea.append("|" + c.name + "\n");
 
 			// The container's rolls
 			if (items.size() > 1)
-				mainGUI.distributionWikiMediaTextArea.append("|rowspan=" + items.size());
-			mainGUI.distributionWikiMediaTextArea.append("|" + c.rolls + "\n");
+				mainGUI.distributionMediaWikiTextArea.append("|rowspan=" + items.size());
+			mainGUI.distributionMediaWikiTextArea.append("|" + c.rolls + "\n");
 
 			for (Item i : items) {
-				mainGUI.distributionWikiMediaTextArea.append("|" + i.odds + "\n" +
+				mainGUI.distributionMediaWikiTextArea.append("|" + i.odds + "\n" +
 						"|-\n");
 			}
 		}
 
-		mainGUI.distributionWikiMediaTextArea.append("|}\n");
+		mainGUI.distributionMediaWikiTextArea.append("|}\n");
+	}
+	private static void addVehiclesToMediaWiki(String itemName) {
+		mainGUI.distributionMediaWikiTextArea.append("=== Vehicles ===\n");
+		mainGUI.distributionMediaWikiTextArea.append(
+				"{| class=\"pztable\" style=\"text-align:center;\"\n" +
+				"|-\n" +
+				"!Vehicle Name\n" +
+				"!Container\n" +
+				"!Rolls\n" +
+				"!Chance\n" +
+				"|-\n");
+
+		for (Location l : parser.vehicles) {
+			if (!l.containsItem(itemName))
+				continue;
+
+			Set<Container> containersWithItem = l.getContainersWithItem(itemName);
+
+			int numChances = 0;
+			for (Container c : containersWithItem) {
+				numChances += c.getItem(itemName).size();
+			}
+
+			// Expand the rows covered to be as many as there are chances for the item
+			if (numChances > 1)
+				mainGUI.distributionMediaWikiTextArea.append("|rowspan=" + numChances);
+			mainGUI.distributionMediaWikiTextArea.append("|" + l.name + "\n");
+
+			for (Container c : containersWithItem) {
+				List<Item> items = c.getItem(itemName);
+
+				// The container name
+				if (items.size() > 1)
+					mainGUI.distributionMediaWikiTextArea.append("|rowspan=" + items.size());
+				mainGUI.distributionMediaWikiTextArea.append("|" + c.name + "\n");
+
+				// The container's rolls
+				if (items.size() > 1)
+					mainGUI.distributionMediaWikiTextArea.append("|rowspan=" + items.size());
+				mainGUI.distributionMediaWikiTextArea.append("|" + c.rolls + "\n");
+
+				for (Item i : items) {
+					mainGUI.distributionMediaWikiTextArea.append("|" + i.odds + "\n" +
+							"|-\n");
+				}
+			}
+		}
+		mainGUI.distributionMediaWikiTextArea.append("|}\n");
 	}
 }

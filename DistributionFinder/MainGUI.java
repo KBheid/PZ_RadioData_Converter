@@ -1,95 +1,154 @@
-import LuaJavaDefines.Container;
-import LuaJavaDefines.Location;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 
 public class MainGUI {
 	public JPanel mainPanel;
+	public JMenuBar menuBar;
 	public JList<String> itemsList;
 	public JList<String> locationsList;
-	public JTextArea distributionWikiMediaTextArea;
+	public JTextArea distributionMediaWikiTextArea;
 	public JTextArea distributionReadableTextArea;
 	public JTabbedPane rightTabbedPane;
 
 	private JTextField filterItemsTextField;
 	private JTextField selectedItemTextField;
 	private JButton copyButton;
+	private JCheckBox BuildingDistributionsCheck;
+	private JCheckBox VehicleDistributionsCheck;
+	private JCheckBox ProceduralDistributionsCheck;
+
+	private String buildingDistPath = "";
+	private String vehicleDistPath = "";
+	private String proceduralDistPath = "";
 
 	MainGUI() {
-		// Ew, gross... Java.
-		try {
-			readDistributions();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		menuBar = new JMenuBar();
+		JMenu mainMenu = new JMenu("File");
 
+		JMenuItem projZombDirPicker = new JMenuItem("Project Zomboid directory...");
+		JMenuItem distFilePicker = new JMenuItem("Building Distribution file...");
+		JMenuItem procedFilePicker = new JMenuItem("Procedural Distribution file...");
+		JMenuItem vehicleFilePicker = new JMenuItem("Vehicle Distribution file...");
+		mainMenu.add(projZombDirPicker);
+		mainMenu.add(distFilePicker);
+		mainMenu.add(procedFilePicker);
+		mainMenu.add(vehicleFilePicker);
+
+		projZombDirPicker.addActionListener(e -> onChooseDir());
+		distFilePicker.addActionListener(e -> {
+			File f = chooseFile("Distributions.lua");
+			if (f != null) {
+				updateDistribution(f, false);
+				updateList();
+			}
+		});
+		procedFilePicker.addActionListener(e -> {
+			File f = chooseFile("ProceduralDistributions.lua");
+			if (f != null) {
+				updateProceduralDistribution(f, false);
+				updateList();
+			}
+		});
+		vehicleFilePicker.addActionListener(e -> {
+			File f = chooseFile("VehicleDistributions.lua");
+			if (f != null) {
+				updateVehicleDistribution(f, false);
+				updateList();
+			}
+		});
+
+		menuBar.add(mainMenu);
+
+		setupCopyButton();
 		setupFilter();
 		setupList();
 	}
 
-	private void readDistributions() throws IOException {
-		// Get file location
-		JFileChooser jfc = new JFileChooser();
 
-		jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		jfc.addChoosableFileFilter(new DirectoryNameFilter("ProjectZomboid"));
-		jfc.addChoosableFileFilter(new FileNameExtensionFilter("Distribution.lua File", "lua"));
-		jfc.setAcceptAllFileFilterUsed(false);
+	private void onChooseDir() {
 
-		String installDir = PZLib.getDefaultSteamInstallDirectory();
-		File installDirFile = new File(installDir);
+		File pzDir = PZLib.promptForPZDir(mainPanel);
+		// If the value is null, then they selected cancel.
+		if (pzDir == null)
+			return;
 
-		if (installDirFile.exists())
-			jfc.setCurrentDirectory(installDirFile.getParentFile());
-		else
-			jfc.setCurrentDirectory(new File("."));
-
-		int result = jfc.showOpenDialog(mainPanel);
-
-		// If they do not approve, kill the program.
-		if (result != JFileChooser.APPROVE_OPTION) {
-			System.exit(0);
-		}
-
-		// Get which file filter is chosen - find the proper file based on that.
-		File distributionsFile;
-		if (jfc.getFileFilter() instanceof FileNameExtensionFilter)
-			distributionsFile = jfc.getSelectedFile();
-		else {
-			String filePath = PZLib.appendSubdirectories(jfc.getSelectedFile().getAbsolutePath(),
+		String distFileLoc = PZLib.appendSubdirectories(
+				pzDir.getAbsolutePath(),
 				"media/lua/server/Items/Distributions.lua");
 
-			distributionsFile = new File(filePath);
-		}
+		String vehicleDistFileLoc = PZLib.appendSubdirectories(
+				pzDir.getAbsolutePath(),
+				"media/lua/server/Vehicles/VehicleDistributions.lua");
 
-		if (!distributionsFile.exists()) {
-			readDistributions();
-			return;
-		}
+		String proceduralDistFileLoc = PZLib.appendSubdirectories(
+				pzDir.getAbsolutePath(),
+				"media/lua/server/Items/ProceduralDistributions.lua");
 
-		// Horribly efficient, just how I like it.
-		String distributionContents = PZLib.readAllFromFile(distributionsFile.getAbsolutePath());
-
-
-		// Just... remove any 'local' from the mix. We'd like to be able to load this in and read it elsewhere
-		distributionContents = distributionContents.replace("local", "");
-
-		Main.parser.parseDistributions(distributionContents);
+		updateDistribution(new File(distFileLoc), true);
+		updateVehicleDistribution(new File(vehicleDistFileLoc), true);
+		updateProceduralDistribution(pzDir, true);
 
 		updateList();
 	}
+	private File chooseFile(String fileExampleName) {
+		JFileChooser jfc = new JFileChooser();
+		jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		jfc.addChoosableFileFilter(new FileNameExtensionFilter(fileExampleName + " file", "lua"));
+		jfc.setCurrentDirectory(new File("."));
+		int result = jfc.showOpenDialog(mainPanel);
+
+		if (result != JFileChooser.APPROVE_OPTION)
+			return null;
+
+		return jfc.getSelectedFile();
+	}
+
+	private void updateDistribution(File distFile, boolean resetOnFail) {
+		if (distFile.exists()) {
+			BuildingDistributionsCheck.setSelected(true);
+
+			Main.globals.loadfile(distFile.getAbsolutePath()).call();
+			Main.parser.parseDistributions();
+
+			return;
+		}
+
+		if (resetOnFail)
+			BuildingDistributionsCheck.setSelected(false);
+	}
+	private void updateVehicleDistribution(File distFile, boolean resetOnFail) {
+		if (distFile.exists()) {
+			VehicleDistributionsCheck.setSelected(true);
+
+			Main.globals.loadfile(distFile.getAbsolutePath()).call();
+			Main.parser.parseVehicleDistributions();
+
+			return;
+		}
+
+		if (resetOnFail)
+			VehicleDistributionsCheck.setSelected(false);
+	}
+	private void updateProceduralDistribution(File distFile, boolean resetOnFail) {
+		if (distFile.exists()) {
+			ProceduralDistributionsCheck.setSelected(true);
+			return;
+		}
+
+		if (resetOnFail)
+			ProceduralDistributionsCheck.setSelected(false);
+	}
+
 	private void setupFilter() {
 		filterItemsTextField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
@@ -113,6 +172,25 @@ public class MainGUI {
 	private void setupList() {
 		itemsList.addListSelectionListener(e -> {
 			selectedItemTextField.setText(itemsList.getSelectedValue());
+		});
+	}
+	private void setupCopyButton() {
+		// Set up copy button functionality
+		copyButton.addActionListener(e -> {
+			StringSelection stringSelection = new StringSelection(distributionMediaWikiTextArea.getText());
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+			clipboard.setContents(stringSelection, null);
+
+			copyButton.setText("Copied!");
+		});
+
+		copyButton.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {}
+			@Override
+			public void focusLost(FocusEvent e) {
+				copyButton.setText("Copy to clipboard");
+			}
 		});
 	}
 

@@ -1,11 +1,5 @@
-function stripExtras(line)
-    return line
-        :gsub("Base.", "")
-        :gsub("TEXTURE_", "")
-        :gsub("TINT","")
-        :gsub("TEXTURE", "")
-        :gsub("farming.", "")
-end
+package.path = package.path .. ";./;"
+require("lua.lib")
 
 function parseContainer(name, vals)
     itemList = luajava.newInstance("java.util.ArrayList")
@@ -19,7 +13,7 @@ function parseContainer(name, vals)
     lastItemName = ""
     for i,nameOrOdds in ipairs(vals["items"]) do
         if i%2 == 1 then
-            lastItemName = stripExtras(nameOrOdds)
+            lastItemName = lib.stripExtras(nameOrOdds)
         else
             itemList:add(luajava.newInstance("LuaJavaDefines.Item", lastItemName, tonumber(nameOrOdds)))
         end
@@ -49,7 +43,7 @@ returnTable = {}
 locationsList = luajava.newInstance("java.util.ArrayList")
 containersList = luajava.newInstance("java.util.ArrayList")
 
-for k,v in pairs(distributionTable) do
+for k,v in pairs(SuburbsDistributions) do
     -- If it has an 'items' key, it is a container itself.
     if v["items"] then
         if #v["items"] < 1 then

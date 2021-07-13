@@ -7,14 +7,20 @@ import org.luaj.vm2.LuaValue;
 import java.util.*;
 
 public class DistributionManager {
-    public List<Location> locations;
-    public List<Container> locationlessContainers;
+    public List<Location> locations = new ArrayList<>();
+    public List<Location> vehicles = new ArrayList<>();
+    public List<Container> locationlessContainers = new ArrayList<>();
 
     public Set<String> getAllItemNames() {
         Set<String> out = new HashSet<>();
 
         // Add all items from locations
         for (Location l : locations)
+            for (Container c : l.containers)
+                for (Item i : c.items)
+                    out.add(i.name);
+
+        for (Location l : vehicles)
             for (Container c : l.containers)
                 for (Item i : c.items)
                     out.add(i.name);
@@ -35,19 +41,22 @@ public class DistributionManager {
         return out;
     }
 
-    // Ignore unchecked casting in this method - we must cast the return values of the lua calls
     @SuppressWarnings("unchecked")
-    public void parseDistributions(String contents) {
-        // Load in the Distribution values
-        LuaValue chunk = Main.globals.load(contents);
-        chunk.call();
-
+    public void parseDistributions() {
+        // Parse regular items
         LuaValue chunk2 = Main.globals.loadfile("lua/distributionParser.lua").call();
-
         LuaTable returnVal = chunk2.checktable();
 
         locations = (List<Location>) returnVal.get("locations").touserdata();
         locationlessContainers = (List<Container>) returnVal.get("locationLesscontainers").touserdata();
+    }
+
+    @SuppressWarnings("unchecked")
+    public void parseVehicleDistributions() {
+        // Parse vehicles
+        LuaValue chunk2 = Main.globals.loadfile("lua/distributionVehiclesParser.lua").call();
+
+        vehicles = (List<Location>) chunk2.touserdata();
     }
 }
 
