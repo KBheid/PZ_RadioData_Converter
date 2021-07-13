@@ -38,7 +38,22 @@ public class DistributionManager {
         for (Location l : locations)
             out.add(l.name);
 
+        for (Location l : vehicles)
+            out.add(l.name);
+
         return out;
+    }
+    public Set<String> getContainerNamesFromLocationName(String locationName) {
+        for (Location l : locations) {
+            if (l.name.equals(locationName))
+                return l.getContainerNames();
+        }
+        for (Location l : vehicles) {
+            if (l.name.equals(locationName))
+                return l.getContainerNames();
+        }
+
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -58,5 +73,6 @@ public class DistributionManager {
 
         vehicles = (List<Location>) chunk2.touserdata();
     }
+
 }
 

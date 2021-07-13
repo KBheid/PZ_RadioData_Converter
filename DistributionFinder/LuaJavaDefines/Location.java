@@ -28,4 +28,12 @@ public class Location {
                 out.add(c);
         return out;
     }
+
+    public Set<String> getContainerNames() {
+        Set<String> out = new HashSet<>();
+        for (Container c : containers)
+            out.add(c.name);
+
+        return out;
+    }
 }

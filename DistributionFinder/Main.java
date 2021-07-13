@@ -22,6 +22,10 @@ public class Main {
 		frame.setJMenuBar(mainGUI.menuBar);
 
 		mainGUI.itemsList.addListSelectionListener(e -> onSelectItem(mainGUI.itemsList.getSelectedValue()));
+		mainGUI.containerList.addListSelectionListener(e -> {
+			if (mainGUI.containerList.getSelectedValue() != null)
+				onSelectContainer(mainGUI.containerList.getSelectedValue(), mainGUI.locationsList.getSelectedValue());
+		});
 
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.pack();
@@ -29,11 +33,11 @@ public class Main {
 		frame.setVisible(true);
 	}
 
+	// ============  SEARCH BY ITEM  ============
 	private static void onSelectItem(String itemName) {
 		updateReadable(itemName);
 		updateWikiMedia(itemName);
 	}
-
 	private static void updateReadable(String itemName) {
 		// Clear the readable tab
 		mainGUI.distributionReadableTextArea.setText("");
@@ -79,7 +83,6 @@ public class Main {
 			}
 		}
 	}
-
 	private static void updateWikiMedia(String itemName) {
 		// Clear the WikiMedia tab
 		mainGUI.distributionMediaWikiTextArea.setText("");
@@ -179,12 +182,12 @@ public class Main {
 		mainGUI.distributionMediaWikiTextArea.append("=== Vehicles ===\n");
 		mainGUI.distributionMediaWikiTextArea.append(
 				"{| class=\"pztable\" style=\"text-align:center;\"\n" +
-				"|-\n" +
-				"!Vehicle Name\n" +
-				"!Container\n" +
-				"!Rolls\n" +
-				"!Chance\n" +
-				"|-\n");
+						"|-\n" +
+						"!Vehicle Name\n" +
+						"!Container\n" +
+						"!Rolls\n" +
+						"!Chance\n" +
+						"|-\n");
 
 		for (Location l : parser.vehicles) {
 			if (!l.containsItem(itemName))
@@ -223,4 +226,42 @@ public class Main {
 		}
 		mainGUI.distributionMediaWikiTextArea.append("|}\n");
 	}
+
+	// ============ SEARCH BY CONTAINER ============
+	private static void onSelectContainer(String containerName, String location) {
+		updateReadableByContainer(containerName, location);
+	}
+	private static void updateReadableByContainer(String containerName, String location) {
+		mainGUI.distributionReadableTextArea.setText("");
+		Container con = null;
+		System.out.println(containerName + " in " + location);
+		for (Location l : parser.locations) {
+			if (l.name.equals(location)) {
+				for (Container c : l.containers)
+					if (c.name.equals(containerName)) {
+						con = c;
+						break;
+					}
+			}
+		}
+
+		mainGUI.distributionReadableTextArea.append(location + "\n");
+		mainGUI.distributionReadableTextArea.append("\t" + containerName + "\n");
+		mainGUI.distributionReadableTextArea.append("\tRolls: " + con.rolls + "\n");
+
+		for (Item i : con.items)
+			mainGUI.distributionReadableTextArea.append("\t\t" + i.name + " : " + i.odds + "\n");
+	}
+	private static void updateMediaWikiByContainer() {}
+
+
+	// ============ SEARCH BY LOCATION ============
+	private static void onSelectLocation(String location) {
+		updateReadableByLocation(location);
+	}
+	private static void updateReadableByLocation(String location) {
+
+	}
+	private static void updateMediaWikiByLocation() {}
+
 }

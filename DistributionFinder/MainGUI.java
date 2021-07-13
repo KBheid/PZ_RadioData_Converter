@@ -16,6 +16,7 @@ public class MainGUI {
 	public JMenuBar menuBar;
 	public JList<String> itemsList;
 	public JList<String> locationsList;
+	public JList<String> containerList;
 	public JTextArea distributionMediaWikiTextArea;
 	public JTextArea distributionReadableTextArea;
 	public JTabbedPane rightTabbedPane;
@@ -26,10 +27,6 @@ public class MainGUI {
 	private JCheckBox BuildingDistributionsCheck;
 	private JCheckBox VehicleDistributionsCheck;
 	private JCheckBox ProceduralDistributionsCheck;
-
-	private String buildingDistPath = "";
-	private String vehicleDistPath = "";
-	private String proceduralDistPath = "";
 
 	MainGUI() {
 		menuBar = new JMenuBar();
@@ -65,6 +62,12 @@ public class MainGUI {
 				updateVehicleDistribution(f, false);
 				updateList();
 			}
+		});
+
+		// Reset filters when selecting the other tab
+		rightTabbedPane.addChangeListener(e -> {
+			filterItemsTextField.setText("Filter " + rightTabbedPane.getTitleAt(rightTabbedPane.getSelectedIndex()));
+			updateList();
 		});
 
 		menuBar.add(mainMenu);
@@ -173,6 +176,19 @@ public class MainGUI {
 		itemsList.addListSelectionListener(e -> {
 			selectedItemTextField.setText(itemsList.getSelectedValue());
 		});
+
+		locationsList.addListSelectionListener(e -> {
+			selectedItemTextField.setText(locationsList.getSelectedValue());
+
+			DefaultListModel<String> containersModel = new DefaultListModel<>();
+			Set<String> subContainerNames =
+					Main.parser.getContainerNamesFromLocationName(locationsList.getSelectedValue());
+
+			for (String name : subContainerNames)
+				containersModel.addElement(name);
+
+			containerList.setModel(containersModel);
+		});
 	}
 	private void setupCopyButton() {
 		// Set up copy button functionality
@@ -219,7 +235,7 @@ public class MainGUI {
 
 		// Ugly but meh
 		switch (rightTabbedPane.getTitleAt(rightTabbedPane.getSelectedIndex())) {
-			case "Containers":
+			case "Locations":
 				locationsList.setModel(newList);
 			case "Items":
 			default:
