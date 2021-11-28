@@ -11,8 +11,7 @@
 | category=Clothing
 | weight={Weight}
 | body_location={BodyLocation}
-| condition=[Unknown]
-| fabric_type={FabricType}
+| fabric={FabricType}
 | capacity={Capacity}
 | weight_reduction={WeightReduction}
 | attachments_provided={AttachmentsProvided}
@@ -22,7 +21,6 @@
 <!-- Protection -->
 | scratch_defense={ScratchDefense}
 | bite_defense={BiteDefense}
-| neck_protection=[Unknown]
 <!-- Insulation -->
 | insulation={Insulation}
 | wind_resistance={WindResistance}
